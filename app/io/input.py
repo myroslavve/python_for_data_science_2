@@ -1,3 +1,5 @@
+import pandas as pd
+
 def get_text_from_console() -> str:
     """
     Get text input from the console.
@@ -5,7 +7,8 @@ def get_text_from_console() -> str:
     Returns:
         str: Text entered by the user from the console.
     """
-    pass
+    line = input("Enter your text: ")
+    return line
 
 def read_file_builtin(file_path: str) -> str:
     """
@@ -17,7 +20,15 @@ def read_file_builtin(file_path: str) -> str:
     Returns:
         str: Content of the file as text.
     """
-    pass
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        return ""
+    except Exception as e:
+        print(f"Error reading file: {str(e)}")
+        return ""
 
 def read_file_pandas(file_path: str) -> str:
     """
@@ -29,4 +40,15 @@ def read_file_pandas(file_path: str) -> str:
     Returns:
         str: Content of the file as text.
     """
-    pass
+    try:
+        df = pd.read_csv(file_path, header=None)
+        rows = []
+        for _, row in df.iterrows():
+            rows.append(','.join(row.astype(str)))
+        return '\n'.join(rows)
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        return ""
+    except Exception as e:
+        print(f"Error reading file with pandas: {str(e)}")
+        return ""
